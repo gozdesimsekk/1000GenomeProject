@@ -193,7 +193,7 @@ idx = ['chi score', 'p value']
 pvaltable = tabulate(dcp, headers=cols, tablefmt="fancy_grid", showindex=idx)
 #print(pvaltable)
 headers = ["rs_id", "errors"]
-errortable = tabulate(dfERRORS.items(), headers = headers)
+errortable = tabulate(dfERRORS.items(), headers=headers)
 #print(errortable)
 
 
