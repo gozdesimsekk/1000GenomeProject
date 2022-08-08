@@ -42,6 +42,7 @@ populations = ["AFR", "AMR", "EAS", "EUR", "SAS"]
 #genotype frekanslarının hesaplanması
 gozlemlenen = []
 beklenen = []
+dfERRORS = {}
 for index, i in enumerate([dfAFR, dfAMR, dfEAS, dfEUR, dfSAS]):
     for j in cols:
         count = i[j].value_counts()
@@ -108,7 +109,9 @@ for index, i in enumerate([dfAFR, dfAMR, dfEAS, dfEUR, dfSAS]):
         plt.title(populations[index])
         plt.gcf().set_size_inches(10, 5)
         plt.close()
-#güven aralığı hesaplama %95
+        dr = dferror.to_dict()
+        dfERRORS.update(dr)
+        #güven aralığı hesaplama %95
         arrayy = np.divide(errorsum, (np.array(N) ** 0.5))
         up = estimatedgenotypes + (1.96 * arrayy)
         low = estimatedgenotypes - (1.96 * arrayy)
@@ -123,6 +126,10 @@ for index, i in enumerate([dfAFR, dfAMR, dfEAS, dfEUR, dfSAS]):
             gozlemlenen.append(q * N.values[0])
         for w in estimatedgenotypes:
             beklenen.append(w * N.values[0])
+#hataları excelde göstermek için
+
+'''dfERRORS = pd.DataFrame(dfERRORS)
+dfERRORS.to_excel('SNPerror.xlsx')'''
 
 #etnik kökenlere göre countları ayırmak
 obslist = np.array_split(gozlemlenen, len(gozlemlenen)/3)
@@ -183,8 +190,13 @@ for l in cols:
     listt.append(chisquare(observed[l], f_exp=expected[l], ddof=1))
 dcp = dict(zip(cols,listt))
 idx = ['chi score', 'p value']
-table = tabulate(dcp, headers=cols, tablefmt="fancy_grid", showindex=idx)
-#print(table)
+pvaltable = tabulate(dcp, headers=cols, tablefmt="fancy_grid", showindex=idx)
+#print(pvaltable)
+headers = ["rs_id", "errors"]
+errortable = tabulate(dfERRORS.items(), headers = headers)
+#print(errortable)
+
+
 
 
 
